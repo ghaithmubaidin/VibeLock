@@ -6,6 +6,8 @@ export function clerkBlock(fp: StackFingerprint): RuleBlock {
   return {
     id: 'clerk',
     source: [],
+    globs: ['middleware.ts', 'src/middleware.ts', '**/*.tsx', '**/*.ts'],
+    description: 'Clerk authentication flow and route protection rules',
     content: `## Clerk Auth${version}
 - Wrap the app root with <ClerkProvider>
 - Use useAuth / useUser hooks for client-side auth state

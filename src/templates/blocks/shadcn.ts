@@ -8,6 +8,8 @@ export function shadcnBlock(fp: StackFingerprint): RuleBlock {
     source:
       fp.detectedFiles?.filter((f) => f === 'components.json' || f === 'package.json') ??
       [],
+    globs: ['components/ui/**/*', 'src/components/ui/**/*', 'components.json'],
+    description: 'Shadcn UI component installation and customization guidelines',
     content: `## shadcn/ui${version}
 - Components live in /src/components/ui (or /components/ui)
 - Use the shadcn CLI to add new components: npx shadcn add <component>

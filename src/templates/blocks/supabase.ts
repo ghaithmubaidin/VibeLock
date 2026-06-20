@@ -9,6 +9,8 @@ export function supabaseBlock(fp: StackFingerprint): RuleBlock {
       fp.detectedFiles?.filter(
         (f) => f.includes('supabase') || f === 'package.json',
       ) ?? [],
+    globs: ['supabase/**/*', 'src/supabase/**/*', 'src/utils/supabase/**/*', 'utils/supabase/**/*'],
+    description: 'Supabase client integration and database RLS rules',
     content: `## Supabase${version}
 - Use the Supabase client from @supabase/supabase-js for database access
 - Use Supabase Auth for authentication (signUp, signIn, session management)

@@ -20,6 +20,8 @@ export function svelteBlock(fp: StackFingerprint): RuleBlock {
   return {
     id: 'svelte',
     source: fp.detectedFiles?.filter((f) => f === 'package.json') ?? [],
+    globs: ['**/*.svelte', '**/*.svelte.ts', '**/*.svelte.js', 'svelte.config.js'],
+    description: 'Svelte 5 runes, snippets, reactivity, and style scoping rules',
     content: `## Svelte ${version}
 ${reactivityRules}
 - Use {#each} with unique keys for rendering lists of items

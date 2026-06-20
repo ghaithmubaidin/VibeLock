@@ -6,6 +6,8 @@ export function viteBlock(fp: StackFingerprint): RuleBlock {
   return {
     id: 'vite',
     source: fp.detectedFiles?.filter((f) => f.includes('vite.config')) ?? [],
+    globs: ['vite.config.ts', 'vite.config.js', 'vite.config.mjs', 'vite.config.mts'],
+    description: 'Vite build configurations and dev server guidelines',
     content: `## Vite${version}
 - Use Vite's import.meta.env for environment variables
 - Place static assets in /public folder

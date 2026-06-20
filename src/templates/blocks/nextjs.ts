@@ -32,6 +32,8 @@ ${cachingRules}
     id: 'nextjs',
     source:
       fp.detectedFiles?.filter((f) => f.includes('next') || f === 'package.json') ?? [],
+    globs: ['src/app/**/*', 'src/pages/**/*', 'app/**/*', 'pages/**/*', 'next.config.js', 'next.config.mjs'],
+    description: 'Next.js App & Pages Router routing, caching, and performance rules',
     content: `## Next.js ${fp.frameworkVersion ?? ''}
 ${routerRules}
 - Keep all API routes under app/ or pages/ directory

@@ -29,8 +29,9 @@ program
 program
   .command('init')
   .description('Set up vibelock in the current project')
-  .action(async () => {
-    await initCommand()
+  .option('-y, --yes', 'Configure all target files automatically without prompts')
+  .action(async (options: { yes?: boolean }) => {
+    await initCommand(options)
   })
 
 program

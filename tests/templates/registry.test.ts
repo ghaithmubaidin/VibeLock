@@ -43,4 +43,18 @@ describe('getRuleBlocks with custom overrides', () => {
       await rm(tmpDir, { recursive: true, force: true })
     }
   })
+
+  it('returns firebase block with correct metadata when firebase is detected', async () => {
+    const fingerprint: StackFingerprint = {
+      baas: 'firebase',
+      baasVersion: '10.0.0',
+      detectedFiles: ['package.json']
+    }
+    const blocks = await getRuleBlocks(fingerprint)
+    const fbBlock = blocks.find(b => b.id === 'firebase')
+    expect(fbBlock).toBeDefined()
+    expect(fbBlock?.content).toContain('Zero Trust Security')
+    expect(fbBlock?.globs).toContain('firebase.json')
+    expect(fbBlock?.description).toBe('Firebase SDK initialization, Security Rules, App Check, and Cloud Functions guidelines')
+  })
 })

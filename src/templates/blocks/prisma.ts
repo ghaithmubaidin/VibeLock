@@ -13,6 +13,8 @@ export function prismaBlock(fp: StackFingerprint): RuleBlock {
       fp.detectedFiles?.filter(
         (f) => f.includes('prisma') || f === 'package.json',
       ) ?? [],
+    globs: ['prisma/**/*', 'schema.prisma', '**/schema.prisma'],
+    description: 'Prisma ORM schema definition and client configuration guidelines',
     content: `## Prisma ORM${version}
 - Define models in /prisma/schema.prisma${dbNote}
 - Use prisma generate after schema changes

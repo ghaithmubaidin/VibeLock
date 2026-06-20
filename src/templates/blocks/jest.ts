@@ -6,6 +6,8 @@ export function jestBlock(fp: StackFingerprint): RuleBlock {
   return {
     id: 'jest',
     source: [],
+    globs: ['**/*.test.ts', '**/*.test.js', 'jest.config.js', 'jest.config.ts', '**/__tests__/**/*'],
+    description: 'Jest testing framework rules and assertion styles',
     content: `## Jest${version}
 - Place test files in __tests__/ directories or next to code (*.test.ts)
 - Use describe/it blocks for test organization

@@ -2,74 +2,81 @@ import { intro, multiselect, outro, cancel } from '@clack/prompts'
 import { installHook } from '../git/hook.js'
 import { exists } from '../utils/fs.js'
 import { join } from 'node:path'
-import { logSuccess } from '../utils/logger.js'
+import { logSuccess, logInfo } from '../utils/logger.js'
 
 export interface InitOptions {
   cwd?: string
+  yes?: boolean
 }
 
 export async function initCommand(options: InitOptions = {}): Promise<void> {
   const cwd = options.cwd ?? process.cwd()
+  const isInteractive = options.yes !== true && process.stdout.isTTY
 
-  intro('vibelock init')
-
-  // Detect which AI tools are present
-  const availableTargets: { value: string; label: string; hint?: string }[] = []
-
-  if (await exists(join(cwd, 'AGENTS.md'))) {
-    availableTargets.push({ value: 'AGENTS.md', label: 'AGENTS.md', hint: 'found' })
+  if (isInteractive) {
+    intro('vibelock init')
   } else {
-    availableTargets.push({ value: 'AGENTS.md', label: 'AGENTS.md', hint: 'will create' })
+    logInfo('Initializing vibelock non-interactively...')
   }
 
-  if (await exists(join(cwd, 'CLAUDE.md'))) {
-    availableTargets.push({ value: 'CLAUDE.md', label: 'CLAUDE.md', hint: 'found' })
-  } else {
-    availableTargets.push({ value: 'CLAUDE.md', label: 'CLAUDE.md', hint: 'will create' })
-  }
+  // Detect which AI tools/rule files are present or should be created
+  const hasAgents = await exists(join(cwd, 'AGENTS.md'))
+  const hasClaude = await exists(join(cwd, 'CLAUDE.md'))
+  const hasCursor = await exists(join(cwd, '.cursor', 'rules'))
+  const hasCopilot = await exists(join(cwd, '.github', 'copilot-instructions.md'))
 
-  const cursorDir = join(cwd, '.cursor', 'rules')
-  const hasCursorRules = await exists(cursorDir)
-  if (hasCursorRules) {
+  let selected: string[] = []
+
+  if (isInteractive) {
+    const availableTargets: { value: string; label: string; hint?: string }[] = []
+
+    availableTargets.push({
+      value: 'AGENTS.md',
+      label: 'AGENTS.md',
+      hint: hasAgents ? 'found' : 'will create',
+    })
+
+    availableTargets.push({
+      value: 'CLAUDE.md',
+      label: 'CLAUDE.md',
+      hint: hasClaude ? 'found' : 'will create',
+    })
+
     availableTargets.push({
       value: '.cursor/rules',
       label: '.cursor/rules/',
-      hint: 'found',
+      hint: hasCursor ? 'found' : 'will create',
     })
-  } else {
-    availableTargets.push({
-      value: '.cursor/rules',
-      label: '.cursor/rules/',
-      hint: 'will create',
-    })
-  }
 
-  const copilotDir = join(cwd, '.github')
-  const hasCopilot = await exists(join(copilotDir, 'copilot-instructions.md'))
-  if (hasCopilot) {
     availableTargets.push({
       value: 'copilot-instructions.md',
       label: 'copilot-instructions.md',
-      hint: 'found',
+      hint: hasCopilot ? 'found' : 'will create',
     })
+
+    const result = await multiselect({
+      message: 'Which files should vibelock manage?',
+      options: availableTargets,
+      required: true,
+    })
+
+    if (typeof result !== 'object' || !Array.isArray(result) || result.length === 0) {
+      cancel('No files selected. Setup cancelled.')
+      process.exitCode = 0
+      return
+    }
+
+    selected = result as string[]
   } else {
-    availableTargets.push({
-      value: 'copilot-instructions.md',
-      label: 'copilot-instructions.md',
-      hint: 'will create',
-    })
-  }
+    // Non-interactive auto-selection
+    const noRuleFiles = !hasAgents && !hasClaude && !hasCursor && !hasCopilot
+    
+    if (hasAgents || noRuleFiles) selected.push('AGENTS.md')
+    if (hasClaude || noRuleFiles) selected.push('CLAUDE.md')
+    if (hasCursor) selected.push('.cursor/rules')
+    if (hasCopilot) selected.push('copilot-instructions.md')
 
-  const selected = await multiselect({
-    message: 'Which files should vibelock manage?',
-    options: availableTargets,
-    required: true,
-  })
-
-  if (typeof selected !== 'object' || !Array.isArray(selected) || selected.length === 0) {
-    cancel('No files selected. Setup cancelled.')
-    process.exitCode = 0
-    return
+    logInfo(`Managing targets: ${selected.join(', ')}`)
   }
 
   // Install the pre-commit hook
@@ -78,7 +85,11 @@ export async function initCommand(options: InitOptions = {}): Promise<void> {
 
   // Run initial scan
   const { scanCommand } = await import('./scan.js')
-  await scanCommand({ cwd, targets: selected as string[] })
+  await scanCommand({ cwd, targets: selected })
 
-  outro('vibelock is now watching your stack.')
+  if (isInteractive) {
+    outro('vibelock is now watching your stack.')
+  } else {
+    logSuccess('vibelock initialization complete.')
+  }
 }

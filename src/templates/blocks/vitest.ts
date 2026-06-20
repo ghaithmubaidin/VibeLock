@@ -6,6 +6,8 @@ export function vitestBlock(fp: StackFingerprint): RuleBlock {
   return {
     id: 'vitest',
     source: fp.detectedFiles?.filter((f) => f === 'package.json') ?? [],
+    globs: ['**/*.test.ts', '**/*.spec.ts', 'vitest.config.ts', 'vitest.config.js'],
+    description: 'Vitest unit testing guidelines, mocking, and timing rules',
     content: `## Vitest${version}
 - Place test files next to the code they test (*.test.ts)
 - Use describe/it blocks for test organization

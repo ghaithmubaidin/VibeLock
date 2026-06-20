@@ -8,6 +8,8 @@ export function typescriptBlock(fp: StackFingerprint): RuleBlock {
     source:
       fp.detectedFiles?.filter((f) => f === 'tsconfig.json' || f === 'package.json') ??
       [],
+    globs: ['**/*.ts', '**/*.tsx', 'tsconfig.json', 'tsconfig.eslint.json'],
+    description: 'Strict TypeScript configuration and type definition guidelines',
     content: `## TypeScript${version}
 - Use strict mode TypeScript — no implicit any
 - Prefer interfaces over types for object shapes

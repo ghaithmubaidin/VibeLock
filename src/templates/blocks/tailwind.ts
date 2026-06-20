@@ -22,6 +22,8 @@ export function tailwindBlock(fp: StackFingerprint): RuleBlock {
       fp.detectedFiles?.filter(
         (f) => f.includes('tailwind') || f === 'package.json',
       ) ?? [],
+    globs: ['**/*.css', '**/*.html', '**/*.tsx', '**/*.jsx', '**/*.vue', '**/*.svelte', 'tailwind.config.js', 'tailwind.config.ts'],
+    description: 'Tailwind CSS v4 utility classes and CSS-first configuration rules',
     content: `## Tailwind CSS ${version}
 - Use Tailwind utility classes directly in markup instead of extracting custom classes
 - Organize classes logically: Layout → Sizing → Typography → Colors → Interactive States

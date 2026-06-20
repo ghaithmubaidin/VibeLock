@@ -6,6 +6,8 @@ export function vueBlock(fp: StackFingerprint): RuleBlock {
   return {
     id: 'vue',
     source: [],
+    globs: ['**/*.vue', '**/*.ts', '**/*.js'],
+    description: 'Vue Composition API and SFC patterns',
     content: `## Vue${version}
 - Use the Composition API with <script setup> syntax
 - Keep component logic in composables under /composables

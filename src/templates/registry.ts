@@ -10,6 +10,7 @@ import { shadcnBlock } from './blocks/shadcn.js'
 import { drizzleBlock } from './blocks/drizzle.js'
 import { prismaBlock } from './blocks/prisma.js'
 import { supabaseBlock } from './blocks/supabase.js'
+import { firebaseBlock } from './blocks/firebase.js'
 import { clerkBlock } from './blocks/clerk.js'
 import { vitestBlock } from './blocks/vitest.js'
 import { jestBlock } from './blocks/jest.js'
@@ -64,6 +65,9 @@ function getDefaultRuleBlocks(fingerprint: StackFingerprint): RuleBlock[] {
   // BaaS blocks
   if (fingerprint.baas === 'supabase') {
     blocks.push(supabaseBlock(fingerprint))
+  }
+  if (fingerprint.baas === 'firebase') {
+    blocks.push(firebaseBlock(fingerprint))
   }
 
   // Auth blocks

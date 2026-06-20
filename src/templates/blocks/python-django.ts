@@ -6,6 +6,8 @@ export function pythonDjangoBlock(fp: StackFingerprint): RuleBlock {
   return {
     id: 'python-django',
     source: [],
+    globs: ['**/*.py', '**/templates/**/*.html', 'manage.py', 'settings.py', '**/settings.py'],
+    description: 'Django model, view, settings, and migration rules',
     content: `## Django${version}
 - Keep business logic in models and services, not views
 - Use class-based views for standard CRUD patterns

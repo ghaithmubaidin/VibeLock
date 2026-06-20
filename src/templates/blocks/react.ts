@@ -20,6 +20,8 @@ export function reactBlock(fp: StackFingerprint): RuleBlock {
   return {
     id: 'react',
     source: fp.detectedFiles?.filter((f) => f === 'package.json') ?? [],
+    globs: ['**/*.tsx', '**/*.jsx', 'src/components/**/*', 'components/**/*'],
+    description: 'React development conventions, hooks, and React 19 compiler rules',
     content: `## React ${version}
 - Use functional components with hooks — no class components
 ${compilationRules}

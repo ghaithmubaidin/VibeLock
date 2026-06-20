@@ -6,6 +6,8 @@ export function pythonFastapiBlock(fp: StackFingerprint): RuleBlock {
   return {
     id: 'python-fastapi',
     source: [],
+    globs: ['**/*.py', 'main.py', 'app/**/*.py', 'api/**/*.py'],
+    description: 'FastAPI routing, dependency injection, and Pydantic validation guidelines',
     content: `## FastAPI${version}
 - Use Pydantic v2 models for request/response validation
 - Use dependency injection via Depends() for shared logic

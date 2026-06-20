@@ -118,6 +118,22 @@ These are my custom rules that vibelock will never touch:
 | **structure** | `src/app/` vs `src/pages/`, `vercel.json`, `netlify.toml`, `fly.toml` |
 | **lockfile** | `pnpm-lock.yaml`, `yarn.lock`, `package-lock.json`, `bun.lock` |
 
+## Customizing Rules (Override Defaults)
+
+If the default rule templates are too generic for your project, you can override them. This allows you, or your AI coding agents, to define custom rules for any tool in your stack.
+
+To customize a rule block:
+1. Create a directory named `.vibelock/rules/` in your project root.
+2. Create a markdown file named after the block's identifier (e.g., `typescript.md`, `vitest.md`, `nextjs.md`).
+3. Write your custom rules in that file.
+
+When `vibelock` runs:
+- It checks `.vibelock/rules/` for matching files.
+- If found, it uses the content of your custom markdown file inside the corresponding `<!-- vibelock:X -->` fences instead of the default template.
+- It also registers the custom markdown file as a source dependency in Git.
+
+This is highly recommended for keeping specialized development patterns, conventions, or "things to avoid" synced across your team and AI coding agents.
+
 ## Commands
 
 | Command | What it does |

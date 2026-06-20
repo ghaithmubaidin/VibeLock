@@ -36,7 +36,7 @@ export async function scanCommand(options: ScanOptions = {}): Promise<void> {
     // Run scanners and build fingerprint
     const scannerResults = await runAllScanners(cwd)
     const fingerprint = mergeFingerprints(scannerResults)
-    const blocks = getRuleBlocks(fingerprint)
+    const blocks = await getRuleBlocks(fingerprint, cwd)
 
     // Determine output targets
     const targets = options.targets ?? ['AGENTS.md', 'CLAUDE.md', '.cursor/rules', 'copilot-instructions.md']
@@ -202,7 +202,7 @@ export async function scanInteractive(options: ScanOptions = {}): Promise<void> 
 
   const scannerResults = await runAllScanners(cwd)
   const fingerprint = mergeFingerprints(scannerResults)
-  const blocks = getRuleBlocks(fingerprint)
+  const blocks = await getRuleBlocks(fingerprint, cwd)
 
   // Show what was detected
   console.error(chalk.yellow('\nvibelock') + '  ' + chalk.white('detected stack:'))

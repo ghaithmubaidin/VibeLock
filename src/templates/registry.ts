@@ -16,8 +16,10 @@ import { jestBlock } from './blocks/jest.js'
 import { pythonFastapiBlock } from './blocks/python-fastapi.js'
 import { pythonDjangoBlock } from './blocks/python-django.js'
 import { typescriptBlock } from './blocks/typescript.js'
+import { safeRead, exists } from '../utils/fs.js'
+import { join } from 'node:path'
 
-export function getRuleBlocks(fingerprint: StackFingerprint): RuleBlock[] {
+function getDefaultRuleBlocks(fingerprint: StackFingerprint): RuleBlock[] {
   const blocks: RuleBlock[] = []
 
   // Framework blocks
@@ -88,6 +90,30 @@ export function getRuleBlocks(fingerprint: StackFingerprint): RuleBlock[] {
   // Language blocks
   if (fingerprint.lang === 'typescript') {
     blocks.push(typescriptBlock(fingerprint))
+  }
+
+  return blocks
+}
+
+export async function getRuleBlocks(fingerprint: StackFingerprint, cwd?: string): Promise<RuleBlock[]> {
+  const blocks = getDefaultRuleBlocks(fingerprint)
+
+  if (cwd) {
+    for (const block of blocks) {
+      const customPath = join(cwd, '.vibelock', 'rules', `${block.id}.md`)
+      if (await exists(customPath)) {
+        const customContent = await safeRead(customPath)
+        if (customContent !== null) {
+          block.content = customContent.trim()
+          
+          // Add custom rules file to the block sources
+          const relPath = join('.vibelock', 'rules', `${block.id}.md`)
+          if (!block.source.includes(relPath)) {
+            block.source.push(relPath)
+          }
+        }
+      }
+    }
   }
 
   return blocks

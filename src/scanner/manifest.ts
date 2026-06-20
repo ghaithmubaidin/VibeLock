@@ -1,4 +1,4 @@
-import { exists, safeRead } from '../utils/fs.js'
+import { safeRead } from '../utils/fs.js'
 import type { ScannerResult } from '../fingerprint/types.js'
 import toml from 'toml'
 import { join } from 'node:path'

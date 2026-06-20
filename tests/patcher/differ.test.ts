@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { diffBlocks } from '../../src/patcher/differ.js'
 import type { RuleBlock } from '../../src/templates/blocks/nextjs.js'
-import { parseFencedSections } from '../../src/templates/outputs/agents-md.js'
 
 function makeBlock(id: string, content: string): RuleBlock {
   return { id, content, source: [] }

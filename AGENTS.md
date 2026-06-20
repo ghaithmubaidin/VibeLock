@@ -81,7 +81,7 @@ The patcher only modifies content inside `<!-- vibelock:X -->` fences. Anything 
 - [ ] No hardcoded framework assumptions without a scanner basis
 
 <!-- vibelock:vitest -->
-## Vitest
+## Vitest ^4.1.9
 - Place test files next to the code they test (*.test.ts)
 - Use describe/it blocks for test organization
 - Use vi.mock for module mocking, vi.fn for function mocks
@@ -90,7 +90,7 @@ The patcher only modifies content inside `<!-- vibelock:X -->` fences. Anything 
 <!-- /vibelock:vitest -->
 
 <!-- vibelock:typescript -->
-## TypeScript
+## TypeScript ES2022
 - Use strict mode TypeScript — no implicit any
 - Prefer interfaces over types for object shapes
 - Use type inference where possible; add explicit annotations for function signatures

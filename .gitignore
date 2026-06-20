@@ -4,3 +4,4 @@ coverage/
 *.tsbuildinfo
 .tmp/
 *.zip
+.commandcode/settings.local.json

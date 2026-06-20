@@ -38,11 +38,14 @@ program
   .description('Scan the project and update rule files')
   .option('--hook', 'Called from git hook — suppress prompts, exit 0 always')
   .option('--dry-run', 'Show what would change without writing anything')
-  .action(async (options: { hook?: boolean; dryRun?: boolean }) => {
+  .option('-y, --yes', 'Apply changes without asking for confirmation')
+  .action(async (options: { hook?: boolean; dryRun?: boolean; yes?: boolean }) => {
     if (options.dryRun) {
       await scanCommand({ dryRun: true })
     } else if (options.hook) {
       await scanCommand({ hook: true })
+    } else if (options.yes) {
+      await scanCommand()
     } else {
       await scanInteractive()
     }

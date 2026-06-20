@@ -8,7 +8,7 @@ import { renderCopilotInstructions } from '../templates/outputs/copilot.js'
 import { diffBlocks } from '../patcher/differ.js'
 import { applyPatch } from '../patcher/writer.js'
 import { stageFiles } from '../git/stage.js'
-import { safeRead, exists } from '../utils/fs.js'
+import { safeRead } from '../utils/fs.js'
 import { logWarning, logInfo, logSuccess } from '../utils/logger.js'
 import { AppError } from '../utils/errors.js'
 import { writeFile, mkdir } from 'node:fs/promises'
@@ -83,7 +83,6 @@ export async function scanCommand(options: ScanOptions = {}): Promise<void> {
     const patchedFiles: string[] = []
 
     for (const target of outputTargets) {
-      const generated = target.render(blocks)
       const diff = diffBlocks(target.currentContent, blocks)
 
       if (
@@ -191,6 +190,14 @@ function printDiffSummary(filePath: string, diff: ReturnType<typeof diffBlocks>)
  * Interactive scan — asks for confirmation before writing.
  */
 export async function scanInteractive(options: ScanOptions = {}): Promise<void> {
+  if (!process.stdout.isTTY) {
+    throw new AppError(
+      'Interactive prompts require a TTY. Use the --yes flag to run non-interactively.',
+      'NO_TTY',
+      true
+    )
+  }
+
   const cwd = options.cwd ?? process.cwd()
 
   const scannerResults = await runAllScanners(cwd)

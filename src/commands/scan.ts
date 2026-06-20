@@ -103,7 +103,10 @@ export async function scanCommand(options: ScanOptions = {}): Promise<void> {
       if (options.dryRun) continue
 
       // Apply patch
-      const patched = applyPatch(target.currentContent, diff)
+      const patched =
+        target.currentContent !== null
+          ? applyPatch(target.currentContent, diff)
+          : target.render(blocks)
 
       // Ensure directory exists
       const dir = dirname(target.filePath)

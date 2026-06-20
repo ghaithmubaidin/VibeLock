@@ -1,0 +1,49 @@
+{
+  "name": "vibelock",
+  "version": "0.1.0",
+  "description": "Keep AI coding agent rule files consistent with your project's actual dependencies",
+  "type": "module",
+  "bin": {
+    "vibelock": "./dist/index.js"
+  },
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsx src/index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src tests",
+    "format": "prettier --write src tests"
+  },
+  "dependencies": {
+    "commander": "^15.0.0",
+    "@clack/prompts": "^1.5.1",
+    "chalk": "^5.6.2",
+    "simple-git": "^3.36.0",
+    "zod": "^4.4.3",
+    "js-yaml": "^4.2.0",
+    "toml": "^4.1.1",
+    "semver": "^7.8.4"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3",
+    "tsup": "^8.5.1",
+    "tsx": "^4.22.4",
+    "vitest": "^4.1.9",
+    "@types/node": "^26.0.0",
+    "@types/js-yaml": "^4.0.9",
+    "@types/semver": "^7.7.1",
+    "eslint": "^10.5.0",
+    "@typescript-eslint/eslint-plugin": "^8.61.1",
+    "@typescript-eslint/parser": "^8.61.1",
+    "prettier": "^3.8.4"
+  },
+  "engines": {
+    "node": ">=20.12.0"
+  },
+  "license": "MIT"
+}

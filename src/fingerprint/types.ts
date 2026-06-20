@@ -27,23 +27,17 @@ export const StackFingerprintSchema = z.object({
   router: z.enum(['app-router', 'pages-router']).optional(),
 
   // Bundler
-  bundler: z
-    .enum(['vite', 'webpack', 'turbopack', 'esbuild', 'rollup', 'rspack'])
-    .optional(),
+  bundler: z.enum(['vite', 'webpack', 'turbopack', 'esbuild', 'rollup', 'rspack']).optional(),
   bundlerVersion: z.string().optional(),
 
   // ORM / DB
-  orm: z
-    .enum(['drizzle', 'prisma', 'typeorm', 'sequelize', 'mikro-orm', 'kysely'])
-    .optional(),
+  orm: z.enum(['drizzle', 'prisma', 'typeorm', 'sequelize', 'mikro-orm', 'kysely']).optional(),
   ormVersion: z.string().optional(),
   database: z.enum(['postgres', 'mysql', 'sqlite', 'mongodb', 'turso']).optional(),
   databaseVersion: z.string().optional(),
 
   // Auth
-  auth: z
-    .enum(['clerk', 'next-auth', 'better-auth', 'lucia', 'supabase-auth'])
-    .optional(),
+  auth: z.enum(['clerk', 'next-auth', 'better-auth', 'lucia', 'supabase-auth']).optional(),
   authVersion: z.string().optional(),
 
   // Backend-as-a-service
@@ -61,15 +55,11 @@ export const StackFingerprintSchema = z.object({
   packageManagerVersion: z.string().optional(),
 
   // Deployment
-  deploy: z
-    .enum(['vercel', 'netlify', 'cloudflare', 'railway', 'fly', 'aws', 'gcp'])
-    .optional(),
+  deploy: z.enum(['vercel', 'netlify', 'cloudflare', 'railway', 'fly', 'aws', 'gcp']).optional(),
   deployVersion: z.string().optional(),
 
   // Monorepo
-  monorepo: z
-    .enum(['turborepo', 'nx', 'moon', 'pnpm-workspaces'])
-    .optional(),
+  monorepo: z.enum(['turborepo', 'nx', 'moon', 'pnpm-workspaces']).optional(),
   monorepoVersion: z.string().optional(),
 
   // Detected config files (raw list, for traceability)

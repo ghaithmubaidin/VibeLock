@@ -33,7 +33,9 @@ export async function scanConfig(rootDir: string): Promise<ScannerResult> {
           result.fingerprint.langVersion = String(compilerOptions.target)
         }
       } catch (error) {
-        logWarning(`Failed to parse ${tsconfigPath}: ${error instanceof Error ? error.message : String(error)}`)
+        logWarning(
+          `Failed to parse ${tsconfigPath}: ${error instanceof Error ? error.message : String(error)}`,
+        )
       }
     }
   }
@@ -55,7 +57,11 @@ export async function scanConfig(rootDir: string): Promise<ScannerResult> {
   }
 
   // next.config — framework detection
-  const nextConfig = await findFirst(rootDir, ['next.config.ts', 'next.config.js', 'next.config.mjs'])
+  const nextConfig = await findFirst(rootDir, [
+    'next.config.ts',
+    'next.config.js',
+    'next.config.mjs',
+  ])
   if (nextConfig) {
     result.detectedFiles.push(nextConfig)
     if (!result.fingerprint.framework) {

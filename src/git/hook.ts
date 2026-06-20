@@ -5,7 +5,7 @@ import { join } from 'node:path'
 
 export async function installHook(rootDir: string): Promise<void> {
   const hookPath = join(rootDir, '.git', 'hooks', 'pre-commit')
-  
+
   const hookStart = '# vibelock-start'
   const hookEnd = '# vibelock-end'
   const hookLine = `${hookStart}

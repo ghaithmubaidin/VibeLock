@@ -25,7 +25,7 @@ export function renderClaudeMd(blocks: RuleBlock[]): string {
     '* Always use standard markdown links with `file://` scheme to link files and directory paths.',
     '',
     '### 3. Quality Standards',
-    '* Write clean, idiomatic code matching the project\'s existing style.',
+    "* Write clean, idiomatic code matching the project's existing style.",
     '* Keep functions small and single-purpose (< 50 lines).',
     '* Prefer explicit parameters over implicit variables.',
     '',

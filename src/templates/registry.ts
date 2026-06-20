@@ -99,7 +99,10 @@ function getDefaultRuleBlocks(fingerprint: StackFingerprint): RuleBlock[] {
   return blocks
 }
 
-export async function getRuleBlocks(fingerprint: StackFingerprint, cwd?: string): Promise<RuleBlock[]> {
+export async function getRuleBlocks(
+  fingerprint: StackFingerprint,
+  cwd?: string,
+): Promise<RuleBlock[]> {
   const blocks = getDefaultRuleBlocks(fingerprint)
 
   if (cwd) {
@@ -109,7 +112,7 @@ export async function getRuleBlocks(fingerprint: StackFingerprint, cwd?: string)
         const customContent = await safeRead(customPath)
         if (customContent !== null) {
           block.content = customContent.trim()
-          
+
           // Add custom rules file to the block sources
           const relPath = join('.vibelock', 'rules', `${block.id}.md`)
           if (!block.source.includes(relPath)) {

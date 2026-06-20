@@ -7,10 +7,7 @@ import type { DiffResult } from './differ.js'
  * - For added blocks: append at end of file
  * Never touches content outside <!-- vibelock:X --> fences.
  */
-export function applyPatch(
-  currentContent: string | null,
-  diff: DiffResult,
-): string {
+export function applyPatch(currentContent: string | null, diff: DiffResult): string {
   let content = currentContent ?? ''
 
   // Handle removed blocks

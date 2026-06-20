@@ -70,7 +70,7 @@ export async function initCommand(options: InitOptions = {}): Promise<void> {
   } else {
     // Non-interactive auto-selection
     const noRuleFiles = !hasAgents && !hasClaude && !hasCursor && !hasCopilot
-    
+
     if (hasAgents || noRuleFiles) selected.push('AGENTS.md')
     if (hasClaude || noRuleFiles) selected.push('CLAUDE.md')
     if (hasCursor) selected.push('.cursor/rules')

@@ -45,14 +45,22 @@ const ORM_RULES: DetectionRule[] = [
 ]
 
 const AUTH_RULES: DetectionRule[] = [
-  { packages: ['@clerk/nextjs', '@clerk/react', 'clerk'], value: 'clerk', versionKey: '@clerk/nextjs' },
+  {
+    packages: ['@clerk/nextjs', '@clerk/react', 'clerk'],
+    value: 'clerk',
+    versionKey: '@clerk/nextjs',
+  },
   { packages: ['next-auth'], value: 'next-auth', versionKey: 'next-auth' },
   { packages: ['better-auth'], value: 'better-auth', versionKey: 'better-auth' },
   { packages: ['lucia'], value: 'lucia', versionKey: 'lucia' },
 ]
 
 const BAAS_RULES: DetectionRule[] = [
-  { packages: ['@supabase/supabase-js', 'supabase'], value: 'supabase', versionKey: '@supabase/supabase-js' },
+  {
+    packages: ['@supabase/supabase-js', 'supabase'],
+    value: 'supabase',
+    versionKey: '@supabase/supabase-js',
+  },
   { packages: ['firebase'], value: 'firebase', versionKey: 'firebase' },
   { packages: ['convex'], value: 'convex', versionKey: 'convex' },
   { packages: ['appwrite'], value: 'appwrite', versionKey: 'appwrite' },
@@ -105,10 +113,10 @@ export async function scanManifest(rootDir: string): Promise<ScannerResult> {
 function detectFirstMatch(
   rules: DetectionRule[],
   depNames: string[],
-  allDeps: Record<string, string>
+  allDeps: Record<string, string>,
 ): { value: string; version: string | undefined } | null {
   for (const rule of rules) {
-    const match = rule.packages.find(pkg => depNames.includes(pkg))
+    const match = rule.packages.find((pkg) => depNames.includes(pkg))
     if (match) {
       const version = rule.versionKey ? allDeps[rule.versionKey] : undefined
       return { value: rule.value, version }
@@ -128,7 +136,9 @@ async function scanPackageJson(rootDir: string, result: ScannerResult): Promise<
   try {
     pkg = JSON.parse(content) as PackageJson
   } catch (error) {
-    logWarning(`Failed to parse ${pkgPath}: ${error instanceof Error ? error.message : String(error)}`)
+    logWarning(
+      `Failed to parse ${pkgPath}: ${error instanceof Error ? error.message : String(error)}`,
+    )
     return
   }
 
@@ -151,7 +161,7 @@ async function scanPackageJson(rootDir: string, result: ScannerResult): Promise<
   const uiLibs: string[] = []
   const uiVersions: Record<string, string> = {}
   for (const rule of UI_RULES) {
-    const match = rule.packages.find(pkg => depNames.includes(pkg))
+    const match = rule.packages.find((pkg) => depNames.includes(pkg))
     if (match) {
       uiLibs.push(rule.value)
       const version = rule.versionKey ? allDeps[rule.versionKey] : undefined
@@ -223,7 +233,8 @@ async function scanPackageJson(rootDir: string, result: ScannerResult): Promise<
   // CSS framework detection
   const cssFramework = detectFirstMatch(CSS_FRAMEWORK_RULES, depNames, allDeps)
   if (cssFramework) {
-    result.fingerprint.cssFramework = cssFramework.value as ScannerResult['fingerprint']['cssFramework']
+    result.fingerprint.cssFramework =
+      cssFramework.value as ScannerResult['fingerprint']['cssFramework']
     if (cssFramework.version) {
       result.fingerprint.cssFrameworkVersion = cssFramework.version
     }
@@ -232,7 +243,8 @@ async function scanPackageJson(rootDir: string, result: ScannerResult): Promise<
   // Component lib detection
   const componentLib = detectFirstMatch(COMPONENT_LIB_RULES, depNames, allDeps)
   if (componentLib) {
-    result.fingerprint.componentLib = componentLib.value as ScannerResult['fingerprint']['componentLib']
+    result.fingerprint.componentLib =
+      componentLib.value as ScannerResult['fingerprint']['componentLib']
     if (componentLib.version) {
       result.fingerprint.componentLibVersion = componentLib.version
     }
@@ -248,7 +260,11 @@ async function scanPackageJson(rootDir: string, result: ScannerResult): Promise<
   }
 
   // Shadcn detection (components.json trigger, but also detect via dep)
-  if (depNames.includes('@radix-ui') && depNames.includes('tailwindcss') && depNames.includes('class-variance-authority')) {
+  if (
+    depNames.includes('@radix-ui') &&
+    depNames.includes('tailwindcss') &&
+    depNames.includes('class-variance-authority')
+  ) {
     result.fingerprint.componentLib = 'shadcn'
   }
 }
@@ -278,28 +294,28 @@ async function scanPyprojectToml(rootDir: string, result: ScannerResult): Promis
 
       if (depNames.some((d: string) => d === 'fastapi' || d.startsWith('fastapi'))) {
         result.fingerprint.pythonFramework = 'fastapi'
-        const depString = deps.find(d => d.startsWith('fastapi'))
+        const depString = deps.find((d) => d.startsWith('fastapi'))
         if (depString) {
           const version = extractVersion(depString)
           if (version) result.fingerprint.pythonFrameworkVersion = version
         }
       } else if (depNames.some((d: string) => d === 'django' || d.startsWith('django'))) {
         result.fingerprint.pythonFramework = 'django'
-        const depString = deps.find(d => d.startsWith('django') || d.startsWith('Django'))
+        const depString = deps.find((d) => d.startsWith('django') || d.startsWith('Django'))
         if (depString) {
           const version = extractVersion(depString)
           if (version) result.fingerprint.pythonFrameworkVersion = version
         }
       } else if (depNames.some((d: string) => d === 'flask' || d.startsWith('flask'))) {
         result.fingerprint.pythonFramework = 'flask'
-        const depString = deps.find(d => d.startsWith('flask') || d.startsWith('Flask'))
+        const depString = deps.find((d) => d.startsWith('flask') || d.startsWith('Flask'))
         if (depString) {
           const version = extractVersion(depString)
           if (version) result.fingerprint.pythonFrameworkVersion = version
         }
       } else if (depNames.some((d: string) => d === 'litestar' || d.startsWith('litestar'))) {
         result.fingerprint.pythonFramework = 'litestar'
-        const depString = deps.find(d => d.startsWith('litestar'))
+        const depString = deps.find((d) => d.startsWith('litestar'))
         if (depString) {
           const version = extractVersion(depString)
           if (version) result.fingerprint.pythonFrameworkVersion = version
@@ -313,7 +329,7 @@ async function scanPyprojectToml(rootDir: string, result: ScannerResult): Promis
     if (poetry?.dependencies && typeof poetry.dependencies === 'object') {
       const poetryDeps = poetry.dependencies as Record<string, unknown>
       const depNames = Object.keys(poetryDeps)
-      
+
       // Helper to extract version from poetry dependency
       const extractPoetryVersion = (dep: unknown): string | undefined => {
         if (typeof dep === 'string') {
@@ -345,6 +361,8 @@ async function scanPyprojectToml(rootDir: string, result: ScannerResult): Promis
       }
     }
   } catch (error) {
-    logWarning(`Failed to parse pyproject.toml: ${error instanceof Error ? error.message : String(error)}`)
+    logWarning(
+      `Failed to parse pyproject.toml: ${error instanceof Error ? error.message : String(error)}`,
+    )
   }
 }

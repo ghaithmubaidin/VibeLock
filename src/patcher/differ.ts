@@ -12,10 +12,7 @@ export interface DiffResult {
  * Diff the current AGENTS.md content against the newly generated rule blocks.
  * Returns what changed, what was added, and what was removed.
  */
-export function diffBlocks(
-  currentContent: string | null,
-  newBlocks: RuleBlock[],
-): DiffResult {
+export function diffBlocks(currentContent: string | null, newBlocks: RuleBlock[]): DiffResult {
   const result: DiffResult = {
     changed: [],
     added: [],

@@ -70,9 +70,7 @@ describe('diffBlocks', () => {
   })
 
   it('handles block IDs with hyphens correctly', () => {
-    const hyphenBlocks = [
-      makeBlock('python-fastapi', '## FastAPI\n- Use async endpoints'),
-    ]
+    const hyphenBlocks = [makeBlock('python-fastapi', '## FastAPI\n- Use async endpoints')]
     const existingContent = `<!-- vibelock:python-fastapi -->
 ## FastAPI
 - Old content

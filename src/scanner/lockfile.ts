@@ -51,7 +51,7 @@ export async function scanLockfile(rootDir: string): Promise<ScannerResult> {
   }
 
   // bun.lock / bun.lockb
-  if (await exists(join(rootDir, 'bun.lock')) || await exists(join(rootDir, 'bun.lockb'))) {
+  if ((await exists(join(rootDir, 'bun.lock'))) || (await exists(join(rootDir, 'bun.lockb')))) {
     result.fingerprint.packageManager = 'bun'
     if (await exists(join(rootDir, 'bun.lock'))) result.detectedFiles.push('bun.lock')
     else result.detectedFiles.push('bun.lockb')

@@ -11,10 +11,10 @@ describe('getRuleBlocks with custom overrides', () => {
     const fingerprint: StackFingerprint = {
       lang: 'typescript',
       langVersion: 'ES2022',
-      detectedFiles: ['package.json']
+      detectedFiles: ['package.json'],
     }
     const blocks = await getRuleBlocks(fingerprint)
-    const tsBlock = blocks.find(b => b.id === 'typescript')
+    const tsBlock = blocks.find((b) => b.id === 'typescript')
     expect(tsBlock).toBeDefined()
     expect(tsBlock?.content).toContain('Use strict mode TypeScript')
   })
@@ -23,7 +23,7 @@ describe('getRuleBlocks with custom overrides', () => {
     const fingerprint: StackFingerprint = {
       lang: 'typescript',
       langVersion: 'ES2022',
-      detectedFiles: ['package.json']
+      detectedFiles: ['package.json'],
     }
 
     // Set up mock custom rule directory
@@ -34,7 +34,7 @@ describe('getRuleBlocks with custom overrides', () => {
 
     try {
       const blocks = await getRuleBlocks(fingerprint, tmpDir)
-      const tsBlock = blocks.find(b => b.id === 'typescript')
+      const tsBlock = blocks.find((b) => b.id === 'typescript')
       expect(tsBlock).toBeDefined()
       expect(tsBlock?.content).toBe('## Custom TS Rules\n- Custom rule 1\n- Custom rule 2')
       expect(tsBlock?.source).toContain(join('.vibelock', 'rules', 'typescript.md'))
@@ -48,13 +48,15 @@ describe('getRuleBlocks with custom overrides', () => {
     const fingerprint: StackFingerprint = {
       baas: 'firebase',
       baasVersion: '10.0.0',
-      detectedFiles: ['package.json']
+      detectedFiles: ['package.json'],
     }
     const blocks = await getRuleBlocks(fingerprint)
-    const fbBlock = blocks.find(b => b.id === 'firebase')
+    const fbBlock = blocks.find((b) => b.id === 'firebase')
     expect(fbBlock).toBeDefined()
     expect(fbBlock?.content).toContain('Zero Trust Security')
     expect(fbBlock?.globs).toContain('firebase.json')
-    expect(fbBlock?.description).toBe('Firebase SDK initialization, Security Rules, App Check, and Cloud Functions guidelines')
+    expect(fbBlock?.description).toBe(
+      'Firebase SDK initialization, Security Rules, App Check, and Cloud Functions guidelines',
+    )
   })
 })

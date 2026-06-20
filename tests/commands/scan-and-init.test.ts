@@ -17,7 +17,7 @@ describe('init and scan commands', () => {
       dependencies: {
         typescript: '^5.0.0',
         vitest: '^1.0.0',
-      }
+      },
     }
     await writeFile(join(tmpDir, 'package.json'), JSON.stringify(pkgJson, null, 2), 'utf-8')
 
@@ -38,13 +38,15 @@ describe('init and scan commands', () => {
 
     const tsMdc = await readFile(join(cursorRulesDir, 'typescript.mdc'), 'utf-8')
     expect(tsMdc).toContain('title: vibelock — typescript')
-    expect(tsMdc).toContain('globs: ["**/*.ts", "**/*.tsx", "tsconfig.json", "tsconfig.eslint.json"]')
+    expect(tsMdc).toContain(
+      'globs: ["**/*.ts", "**/*.tsx", "tsconfig.json", "tsconfig.eslint.json"]',
+    )
 
     // 3. Remove vitest from stack (re-write package.json with only typescript)
     const updatedPkgJson = {
       dependencies: {
-        typescript: '^5.0.0'
-      }
+        typescript: '^5.0.0',
+      },
     }
     await writeFile(join(tmpDir, 'package.json'), JSON.stringify(updatedPkgJson, null, 2), 'utf-8')
 

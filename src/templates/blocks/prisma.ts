@@ -3,16 +3,11 @@ import type { RuleBlock } from '../types.js'
 
 export function prismaBlock(fp: StackFingerprint): RuleBlock {
   const version = fp.ormVersion ? ` ${fp.ormVersion}` : ''
-  const dbNote = fp.database
-    ? `\n- Database: ${fp.database} (detected from Prisma schema)`
-    : ''
+  const dbNote = fp.database ? `\n- Database: ${fp.database} (detected from Prisma schema)` : ''
 
   return {
     id: 'prisma',
-    source:
-      fp.detectedFiles?.filter(
-        (f) => f.includes('prisma') || f === 'package.json',
-      ) ?? [],
+    source: fp.detectedFiles?.filter((f) => f.includes('prisma') || f === 'package.json') ?? [],
     globs: ['prisma/**/*', 'schema.prisma', '**/schema.prisma'],
     description: 'Prisma ORM schema definition and client configuration guidelines',
     content: `## Prisma ORM${version}

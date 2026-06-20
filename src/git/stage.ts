@@ -1,10 +1,7 @@
 import { simpleGit } from 'simple-git'
 import { logWarning } from '../utils/logger.js'
 
-export async function stageFiles(
-  rootDir: string,
-  filePaths: string[],
-): Promise<void> {
+export async function stageFiles(rootDir: string, filePaths: string[]): Promise<void> {
   if (filePaths.length === 0) return
 
   try {

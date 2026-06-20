@@ -20,11 +20,11 @@ export async function scanStructure(rootDir: string): Promise<ScannerResult> {
     result.fingerprint.router = 'app-router'
   }
   // Check src/pages/ — only set if app-router wasn't found
-  if (!result.fingerprint.router && await exists(join(rootDir, 'src', 'pages'))) {
+  if (!result.fingerprint.router && (await exists(join(rootDir, 'src', 'pages')))) {
     result.fingerprint.router = 'pages-router'
   }
   // Check pages/ at root
-  if (!result.fingerprint.router && await exists(join(rootDir, 'pages'))) {
+  if (!result.fingerprint.router && (await exists(join(rootDir, 'pages')))) {
     result.fingerprint.router = 'pages-router'
   }
 
@@ -52,8 +52,8 @@ export async function scanStructure(rootDir: string): Promise<ScannerResult> {
     result.detectedFiles.push('fly.toml')
   }
   if (
-    await exists(join(rootDir, 'wrangler.toml')) ||
-    await exists(join(rootDir, 'wrangler.jsonc'))
+    (await exists(join(rootDir, 'wrangler.toml'))) ||
+    (await exists(join(rootDir, 'wrangler.jsonc')))
   ) {
     result.fingerprint.deploy = 'cloudflare'
     if (await exists(join(rootDir, 'wrangler.toml'))) result.detectedFiles.push('wrangler.toml')

@@ -5,10 +5,7 @@ export function drizzleBlock(fp: StackFingerprint): RuleBlock {
   const version = fp.ormVersion ? ` ${fp.ormVersion}` : ''
   return {
     id: 'drizzle',
-    source:
-      fp.detectedFiles?.filter(
-        (f) => f.includes('drizzle') || f === 'package.json',
-      ) ?? [],
+    source: fp.detectedFiles?.filter((f) => f.includes('drizzle') || f === 'package.json') ?? [],
     globs: ['db/**/*', 'src/db/**/*', 'schema.ts', 'drizzle.config.ts', '**/schema.ts'],
     description: 'Drizzle ORM schema patterns and queries guidelines',
     content: `## Drizzle ORM${version}

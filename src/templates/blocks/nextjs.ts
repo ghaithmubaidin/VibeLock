@@ -5,7 +5,7 @@ export function nextjsBlock(fp: StackFingerprint): RuleBlock {
   const versionNum = fp.frameworkVersion ? parseFloat(fp.frameworkVersion) : 16
   const isV15OrHigher = versionNum >= 15
   const isV16OrHigher = versionNum >= 16
-  
+
   let cachingRules = '- Use Next.js built-in fetch with caching and revalidation'
   if (isV16OrHigher) {
     cachingRules = `- Adopt "use cache" directive for explicit, composable caching of data or component outputs
@@ -23,16 +23,22 @@ ${cachingRules}
       : `- Use Pages Router patterns: getStaticProps / getServerSideProps / getStaticPaths
 - Keep API routes under /pages/api`
 
-  const performanceRules = isV15OrHigher 
+  const performanceRules = isV15OrHigher
     ? `- Enable Partial Prerendering (PPR) for mixing static shells with streamed dynamic content
 - Use Turbopack (default in Next.js 15/16) for development performance`
     : ''
 
   return {
     id: 'nextjs',
-    source:
-      fp.detectedFiles?.filter((f) => f.includes('next') || f === 'package.json') ?? [],
-    globs: ['src/app/**/*', 'src/pages/**/*', 'app/**/*', 'pages/**/*', 'next.config.js', 'next.config.mjs'],
+    source: fp.detectedFiles?.filter((f) => f.includes('next') || f === 'package.json') ?? [],
+    globs: [
+      'src/app/**/*',
+      'src/pages/**/*',
+      'app/**/*',
+      'pages/**/*',
+      'next.config.js',
+      'next.config.mjs',
+    ],
     description: 'Next.js App & Pages Router routing, caching, and performance rules',
     content: `## Next.js ${fp.frameworkVersion ?? ''}
 ${routerRules}

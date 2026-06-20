@@ -40,7 +40,12 @@ export async function scanCommand(options: ScanOptions = {}): Promise<void> {
     const blocks = await getRuleBlocks(fingerprint, cwd)
 
     // Determine output targets
-    const targets = options.targets ?? ['AGENTS.md', 'CLAUDE.md', '.cursor/rules', 'copilot-instructions.md']
+    const targets = options.targets ?? [
+      'AGENTS.md',
+      'CLAUDE.md',
+      '.cursor/rules',
+      'copilot-instructions.md',
+    ]
     const outputTargets: OutputTarget[] = []
 
     if (targets.includes('AGENTS.md')) {
@@ -67,7 +72,7 @@ export async function scanCommand(options: ScanOptions = {}): Promise<void> {
         outputTargets.push({
           filePath,
           render: () => {
-            const globsStr = block.globs ? block.globs.map(g => `"${g}"`).join(', ') : '"**/*"'
+            const globsStr = block.globs ? block.globs.map((g) => `"${g}"`).join(', ') : '"**/*"'
             const desc = block.description ?? `Auto-generated rules for ${block.id}`
             return [
               '---',
@@ -81,7 +86,7 @@ export async function scanCommand(options: ScanOptions = {}): Promise<void> {
               `<!-- vibelock:${block.id} -->`,
               block.content,
               `<!-- /vibelock:${block.id} -->`,
-              ''
+              '',
             ].join('\n')
           },
           currentContent: await safeRead(filePath),
@@ -107,11 +112,7 @@ export async function scanCommand(options: ScanOptions = {}): Promise<void> {
       const targetBlocks = target.block ? [target.block] : blocks
       const diff = diffBlocks(target.currentContent, targetBlocks)
 
-      if (
-        diff.changed.length === 0 &&
-        diff.added.length === 0 &&
-        diff.removed.length === 0
-      ) {
+      if (diff.changed.length === 0 && diff.added.length === 0 && diff.removed.length === 0) {
         continue
       }
 
@@ -186,10 +187,7 @@ export async function scanCommand(options: ScanOptions = {}): Promise<void> {
           deletedFiles.push(oldUnifiedPath)
           if (!options.hook) {
             console.error(
-              '  ' +
-                chalk.cyan('vibelock.mdc') +
-                ' ' +
-                chalk.red('old unified rules file removed'),
+              '  ' + chalk.cyan('vibelock.mdc') + ' ' + chalk.red('old unified rules file removed'),
             )
           }
         }
@@ -209,9 +207,7 @@ export async function scanCommand(options: ScanOptions = {}): Promise<void> {
     // Show results
     if (options.hook && hasChanges) {
       console.error(
-        chalk.yellow('vibelock') +
-          '  ' +
-          chalk.white('stack drift detected and patched'),
+        chalk.yellow('vibelock') + '  ' + chalk.white('stack drift detected and patched'),
       )
       for (const file of patchedFiles) {
         const relPath = file.replace(cwd + '/', '').replace(cwd, '.')
@@ -254,21 +250,15 @@ function printDiffSummary(filePath: string, diff: ReturnType<typeof diffBlocks>)
   console.error(chalk.yellow('\nvibelock') + '  ' + chalk.white(`changes for ${relPath}:`))
 
   for (const block of diff.changed) {
-    console.error(
-      '  ' + chalk.cyan(block.id) + ' ' + chalk.white('rule block updated'),
-    )
+    console.error('  ' + chalk.cyan(block.id) + ' ' + chalk.white('rule block updated'))
   }
 
   for (const block of diff.added) {
-    console.error(
-      '  ' + chalk.cyan(block.id) + ' ' + chalk.green('rule block added'),
-    )
+    console.error('  ' + chalk.cyan(block.id) + ' ' + chalk.green('rule block added'))
   }
 
   for (const id of diff.removed) {
-    console.error(
-      '  ' + chalk.cyan(id) + ' ' + chalk.red('rule block removed'),
-    )
+    console.error('  ' + chalk.cyan(id) + ' ' + chalk.red('rule block removed'))
   }
 }
 
@@ -280,7 +270,7 @@ export async function scanInteractive(options: ScanOptions = {}): Promise<void> 
     throw new AppError(
       'Interactive prompts require a TTY. Use the --yes flag to run non-interactively.',
       'NO_TTY',
-      true
+      true,
     )
   }
 
@@ -340,7 +330,7 @@ export async function scanInteractive(options: ScanOptions = {}): Promise<void> 
     const cursorDir = join(cwd, '.cursor', 'rules')
     const { readdir } = await import('node:fs/promises')
     const files = await readdir(cursorDir)
-    const activeBlockIds = blocks.map(b => b.id)
+    const activeBlockIds = blocks.map((b) => b.id)
 
     // Check for stale .mdc files to delete
     for (const file of files) {
@@ -349,7 +339,12 @@ export async function scanInteractive(options: ScanOptions = {}): Promise<void> 
         if (blockId !== 'vibelock' && !activeBlockIds.includes(blockId)) {
           const content = await safeRead(join(cursorDir, file))
           if (content && content.includes('vibelock')) {
-            console.error('  ' + chalk.cyan(`${blockId}.mdc`) + ' ' + chalk.red('stale rules file will be removed'))
+            console.error(
+              '  ' +
+                chalk.cyan(`${blockId}.mdc`) +
+                ' ' +
+                chalk.red('stale rules file will be removed'),
+            )
             hasAnyChanges = true
           }
         }
@@ -358,7 +353,12 @@ export async function scanInteractive(options: ScanOptions = {}): Promise<void> 
 
     // Check for old unified vibelock.mdc to delete
     if (files.includes('vibelock.mdc')) {
-      console.error('  ' + chalk.cyan('vibelock.mdc') + ' ' + chalk.red('old unified rules file will be removed'))
+      console.error(
+        '  ' +
+          chalk.cyan('vibelock.mdc') +
+          ' ' +
+          chalk.red('old unified rules file will be removed'),
+      )
       hasAnyChanges = true
     }
 

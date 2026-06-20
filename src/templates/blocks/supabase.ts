@@ -5,10 +5,7 @@ export function supabaseBlock(fp: StackFingerprint): RuleBlock {
   const version = fp.baasVersion ? ` ${fp.baasVersion}` : ''
   return {
     id: 'supabase',
-    source:
-      fp.detectedFiles?.filter(
-        (f) => f.includes('supabase') || f === 'package.json',
-      ) ?? [],
+    source: fp.detectedFiles?.filter((f) => f.includes('supabase') || f === 'package.json') ?? [],
     globs: ['supabase/**/*', 'src/supabase/**/*', 'src/utils/supabase/**/*', 'utils/supabase/**/*'],
     description: 'Supabase client integration and database RLS rules',
     content: `## Supabase${version}

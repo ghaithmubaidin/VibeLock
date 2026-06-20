@@ -5,9 +5,7 @@ export function shadcnBlock(fp: StackFingerprint): RuleBlock {
   const version = fp.componentLibVersion ? ` ${fp.componentLibVersion}` : ''
   return {
     id: 'shadcn',
-    source:
-      fp.detectedFiles?.filter((f) => f === 'components.json' || f === 'package.json') ??
-      [],
+    source: fp.detectedFiles?.filter((f) => f === 'components.json' || f === 'package.json') ?? [],
     globs: ['components/ui/**/*', 'src/components/ui/**/*', 'components.json'],
     description: 'Shadcn UI component installation and customization guidelines',
     content: `## shadcn/ui${version}

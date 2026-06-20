@@ -2,15 +2,29 @@ import type { StackFingerprint } from '../../fingerprint/types.js'
 import type { RuleBlock } from '../types.js'
 
 export function svelteBlock(fp: StackFingerprint): RuleBlock {
-  const version = fp.uiVersions?.svelte ? ` ${fp.uiVersions.svelte}` : ''
+  const version = fp.uiVersions?.svelte ?? ''
+  const isV5OrHigher = !version || parseFloat(version) >= 5
+
+  const reactivityRules = isV5OrHigher
+    ? `- Use Runes explicitly ($state, $derived, $effect) for reactivity — avoid Svelte 4 store syntax where runes fit
+- Prefer $derived over $effect for computing derived values
+- Use $props() for component inputs and define clear TypeScript interfaces for them`
+    : `- Use reactive declarations ($:) to compute values
+- Use Svelte stores (writable, readable, derived) for global state management`
+
+  const logicRules = isV5OrHigher
+    ? `- Extract shared reactive state logic into Svelte-compatible files (*.svelte.ts or *.svelte.js)
+- Use Svelte 5 snippet syntax for reusable markup blocks`
+    : `- Extract shared logic into custom stores or helper files (*.ts / *.js)`
+
   return {
     id: 'svelte',
-    source: [],
-    content: `## Svelte${version}
-- Use runes mode ($state, $derived, $effect) for Svelte 5 projects
-- Keep reactive declarations minimal — derive from $state
-- Use {#each} with keys for list rendering
-- Scope styles with <style scoped> (default in Svelte)
-- Extract shared logic into *.svelte.ts files`,
+    source: fp.detectedFiles?.filter((f) => f === 'package.json') ?? [],
+    content: `## Svelte ${version}
+${reactivityRules}
+- Use {#each} with unique keys for rendering lists of items
+- Scope styles inside Svelte components by default
+${logicRules}
+- Use event handlers directly (e.g. onclick={handler}) instead of deprecated event modifiers`.trim(),
   }
 }

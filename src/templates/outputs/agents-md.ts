@@ -40,7 +40,7 @@ export function renderAgentsMd(blocks: RuleBlock[]): string {
 
 export function parseFencedSections(content: string): Map<string, string> {
   const sections = new Map<string, string>()
-  const regex = /<!--\s*vibelock:(\w+)\s*-->([\s\S]*?)<!--\s*\/vibelock:\1\s*-->/g
+  const regex = /<!--\s*vibelock:([\w-]+)\s*-->([\s\S]*?)<!--\s*\/vibelock:\1\s*-->/g
   let match: RegExpExecArray | null
 
   while ((match = regex.exec(content)) !== null) {
@@ -54,7 +54,7 @@ export function parseFencedSections(content: string): Map<string, string> {
 
 export function getExistingBlockIds(content: string): string[] {
   const ids: string[] = []
-  const regex = /<!--\s*vibelock:(\w+)\s*-->/g
+  const regex = /<!--\s*vibelock:([\w-]+)\s*-->/g
   let match: RegExpExecArray | null
 
   while ((match = regex.exec(content)) !== null) {

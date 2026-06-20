@@ -68,4 +68,20 @@ describe('diffBlocks', () => {
     expect(diff.added).toHaveLength(2)
     expect(diff.removed).toHaveLength(0)
   })
+
+  it('handles block IDs with hyphens correctly', () => {
+    const hyphenBlocks = [
+      makeBlock('python-fastapi', '## FastAPI\n- Use async endpoints'),
+    ]
+    const existingContent = `<!-- vibelock:python-fastapi -->
+## FastAPI
+- Old content
+<!-- /vibelock:python-fastapi -->`
+    const diff = diffBlocks(existingContent, hyphenBlocks)
+    expect(diff.changed).toHaveLength(1)
+    expect(diff.changed[0]!.id).toBe('python-fastapi')
+    expect(diff.unchanged).toHaveLength(0)
+    expect(diff.added).toHaveLength(0)
+    expect(diff.removed).toHaveLength(0)
+  })
 })

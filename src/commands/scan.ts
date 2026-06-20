@@ -9,7 +9,7 @@ import { renderCopilotInstructions } from '../templates/outputs/copilot.js'
 import { diffBlocks } from '../patcher/differ.js'
 import { applyPatch } from '../patcher/writer.js'
 import { stageFiles } from '../git/stage.js'
-import { safeRead } from '../utils/fs.js'
+import { safeRead, exists } from '../utils/fs.js'
 import { logWarning, logInfo, logSuccess } from '../utils/logger.js'
 import { AppError } from '../utils/errors.js'
 import { writeFile, mkdir } from 'node:fs/promises'
@@ -217,21 +217,38 @@ export async function scanInteractive(options: ScanOptions = {}): Promise<void> 
     }
   }
 
-  // Generate and show diff for AGENTS.md
-  const agentsPath = join(cwd, 'AGENTS.md')
-  const currentContent = await safeRead(agentsPath)
-  const diff = diffBlocks(currentContent, blocks)
+  // Determine which files currently exist and should be scanned
+  const outputTargets = [
+    { name: 'AGENTS.md', path: join(cwd, 'AGENTS.md') },
+    { name: 'CLAUDE.md', path: join(cwd, 'CLAUDE.md') },
+    { name: '.cursor/rules', path: join(cwd, '.cursor', 'rules', 'vibelock.mdc') },
+    { name: 'copilot-instructions.md', path: join(cwd, '.github', 'copilot-instructions.md') }
+  ]
 
-  if (
-    diff.changed.length === 0 &&
-    diff.added.length === 0 &&
-    diff.removed.length === 0
-  ) {
+  const activeTargets: string[] = []
+  let hasAnyChanges = false
+
+  for (const target of outputTargets) {
+    if (await exists(target.path)) {
+      const currentContent = await safeRead(target.path)
+      const diff = diffBlocks(currentContent, blocks)
+      
+      if (
+        diff.changed.length > 0 ||
+        diff.added.length > 0 ||
+        diff.removed.length > 0
+      ) {
+        printDiffSummary(target.name, diff)
+        hasAnyChanges = true
+      }
+      activeTargets.push(target.name)
+    }
+  }
+
+  if (!hasAnyChanges) {
     logSuccess('stack is in sync — no changes needed')
     return
   }
-
-  printDiffSummary('AGENTS.md', diff)
 
   const proceed = await confirm({
     message: 'Apply these changes?',
@@ -242,5 +259,5 @@ export async function scanInteractive(options: ScanOptions = {}): Promise<void> 
     return
   }
 
-  await scanCommand({ ...options, targets: ['AGENTS.md'] })
+  await scanCommand({ ...options, targets: activeTargets })
 }

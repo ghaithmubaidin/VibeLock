@@ -1,6 +1,7 @@
 import { runAllScanners } from '../scanner/coordinator.js'
 import { mergeFingerprints } from '../fingerprint/engine.js'
 import { getRuleBlocks } from '../templates/registry.js'
+import type { RuleBlock } from '../templates/types.js'
 import { renderAgentsMd } from '../templates/outputs/agents-md.js'
 import { renderClaudeMd } from '../templates/outputs/claude-md.js'
 import { renderCursorRulesMdc } from '../templates/outputs/cursor-rules.js'
@@ -25,7 +26,7 @@ export interface ScanOptions {
 
 interface OutputTarget {
   filePath: string
-  render: (blocks: ReturnType<typeof getRuleBlocks>) => string
+  render: (blocks: RuleBlock[]) => string
   currentContent: string | null
 }
 
